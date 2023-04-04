@@ -3,7 +3,6 @@ import 'package:flutter_boost/flutter_boost.dart';
 import 'package:flutter_module/route/routemap.dart';
 
 void main() {
-  ///添加全局生命周期监听类
   PageVisibilityBinding.instance.addGlobalObserver(AppLifecycleObserver());
   CustomFlutterBinding();
   runApp(const MyApp());
