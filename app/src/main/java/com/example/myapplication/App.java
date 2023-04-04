@@ -18,7 +18,6 @@ public class App extends Application {
         FlutterBoost.instance().setup(this, new FlutterBoostDelegate() {
             @Override
             public void pushNativeRoute(FlutterBoostRouteOptions options) {
-                Log.d("FlutterBoost", "pushNativeRoute options=" + options);
                 switch (options.pageName()) {
                     case "go_to_SecondActivity":
                         //这里根据options.pageName来判断你想跳转哪个页面，这里简单给一个
@@ -32,7 +31,6 @@ public class App extends Application {
 
             @Override
             public void pushFlutterRoute(FlutterBoostRouteOptions options) {
-                Log.d("FlutterBoost", "pushFlutterRoute options=" + options.pageName());
                 Intent intent = new FlutterScreenActivity.CachedEngineIntentBuilder(FlutterScreenActivity.class)
                         .backgroundMode(FlutterActivityLaunchConfigs.BackgroundMode.transparent)
                         .destroyEngineWithActivity(false)
