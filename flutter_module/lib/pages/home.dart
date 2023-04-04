@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_boost/flutter_boost.dart';
-
-import '../common/tools.dart';
+import 'package:flutter_module/pages/dynamic/dynamic.dart';
+import 'package:flutter_module/pages/index/index.dart';
+import 'package:flutter_module/pages/message/message.dart';
+import 'package:flutter_module/pages/mine/mine.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
@@ -13,67 +15,57 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _counter = 0;
-  late VoidCallback _removeListener;
-
-  @override
-  void initState() {
-    super.initState();
-
-    ///添加事件响应者,监听native发往flutter端的事件
-    _removeListener =
-        BoostChannel.instance.addEventListener("native_to_flutter_event", (key, arguments) async {
-          print('flutter接收 key:${key}');
-          print('flutter接收 arguments:${arguments}');
-          // return null;
-        });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _removeListener.call();
-  }
+  var currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
+      // appBar: AppBar(
+      //   title: Text(widget.title),
+      // ),
+      backgroundColor: Colors.grey,
+      bottomNavigationBar: BottomNavigationBar(
+        items: bottomTabs,
+        type: BottomNavigationBarType.fixed,
+        iconSize: 22,
+        selectedItemColor: Theme.of(context).primaryColor,
+        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal),
+        currentIndex: currentIndex,
+        showUnselectedLabels: true,
+        showSelectedLabels: true,
+        onTap: (index) {
+          setState(() {
+            currentIndex = index;
+          });
+        },
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            ElevatedButton(
-              child: const Text('打开原生界面'),
-              onPressed: () {
-                BoostNavigator.instance
-                    .push('go_to_SecondActivity') // Native页面路由
-                    .then((value) => showToast('from native retval:$value'));
-              },
-            ),
-            ElevatedButton(
-              child: const Text('退出当前页面，返回参数给上一个Native页面'),
-              onPressed: () {
-                BoostNavigator.instance.pop({'retval': 'I am from dart'});
-              },
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => {},
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      body: homePages[currentIndex],
     );
   }
+
+  final List<BottomNavigationBarItem> bottomTabs = [
+    const BottomNavigationBarItem(
+      icon: Icon(Icons.home),
+      label: '首页',
+    ),
+    const BottomNavigationBarItem(
+      icon: Icon(Icons.dynamic_feed),
+      label: '动态',
+    ),
+    const BottomNavigationBarItem(
+      icon: Icon(Icons.message),
+      label: '消息',
+    ),
+    const BottomNavigationBarItem(
+      icon: Icon(Icons.person),
+      label: '我的',
+    ),
+  ];
+
+  final List homePages = [
+    const IndexPage(),
+    const DynamicPage(),
+    const MessagePage(),
+    const MinePage(),
+  ];
 }
